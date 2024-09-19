@@ -1,0 +1,42 @@
+//FORMAT
+^ -> example_terminal -> exampleTerminal
+$$ = non-terminal
+
+//INPUT
+non-terminal: TERMINAL
+
+//OUTPUT
+ParseResult Parser::parseNonTerminal()
+{
+	auto result = _tokenizer->peek();
+
+	if (result.empty())
+	{
+		return { false, expected("non-terminal") };
+	}
+
+	_tokenizer->next();
+
+	return { true, "", { result } };
+}
+
+//RECIPE
+ParseResult Parser::parse<^$$>()
+{
+	auto result = _tokenizer->peek();
+
+	if (result.empty())
+	{
+		return { false, expected("<$$>") };
+	}
+
+	_tokenizer->next();
+
+	return { true, "", { result } };
+}
+
+//INPUT
+non-tetminals: non-terminals non-terminal
+             | non-terminal
+			 | lambda
+//OUTPUT
