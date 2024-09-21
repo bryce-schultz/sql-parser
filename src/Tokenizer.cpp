@@ -116,6 +116,7 @@ std::string SQL::Tokenizer::next()
 		}
 	}
 
+	_previous_token = _token;
 	_token = token;
 	return _token;
 }
@@ -123,6 +124,11 @@ std::string SQL::Tokenizer::next()
 int SQL::Tokenizer::getTrailingspace() const
 {
 	return _trailingspace;
+}
+
+std::string SQL::Tokenizer::getPreviousToken() const
+{
+	return _previous_token;
 }
 
 std::string SQL::Tokenizer::getErrorString(const std::string &message, int additional_space)

@@ -66,8 +66,51 @@ namespace SQL
 		}
 	};
 
+	class TypeIsValidSemanticCheck : public SemanticCheck
+	{
+	public:
+		TypeIsValidSemanticCheck(SemanticLevel level = SemanticLevel::ERROR, bool enabled = true):
+			SemanticCheck(level, enabled)
+		{
+		}
+
+		SemanticResult check(const std::string &value) override
+		{
+			bool result = false;
+
+			if (value == "int")
+			{
+				result = true;
+			}
+			else if (value == "float")
+			{
+				result = true;
+			}
+			else if (value == "string")
+			{
+				result = true;
+			}
+			else if (value == "bool")
+			{
+				result = true;
+			}
+			else if (value == "char")
+			{
+				result = true;
+			}
+
+			if (!result)
+			{
+				return { false, "Invalid type" };
+			}
+
+			return { true };
+		}
+	};
+
 	namespace globals
 	{
 		extern TableNameIsNotKeywordSemanticCheck table_name_is_not_keyword_semantic_check;
+		extern TypeIsValidSemanticCheck type_is_valid_semantic_check;
 	}
 }
