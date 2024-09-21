@@ -10,7 +10,7 @@ It uses a recursive decent strategy with a hand written tokenizer and parser. I 
 ### SQL Parser
 - [x] select
 - [x] delete
-- [ ] create
+- [x] create
 - [ ] insert
 - [ ] update
 - [x] drop
