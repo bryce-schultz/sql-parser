@@ -2,6 +2,10 @@
 
 #include <string>
 
+extern const std::string COLOR_RED;
+extern const std::string COLOR_RESET;
+extern const std::string COLOR_GREEN;
+
 namespace SQL
 {
 	class Tokenizer
@@ -13,13 +17,17 @@ namespace SQL
 		std::string peek();
 		std::string next();
 
-		std::string getErrorString(const std::string &message = "", int additional_space = 0) const;
+		int getTrailingspace() const;
+
+		std::string getErrorString(const std::string &message = "", int additional_space = 0);
 	private:
 		std::string _filename;
 		std::string _original_input;
 		std::string _input;
 		std::string _token;
 		std::string _current_line;
+
+		int _trailingspace;
 
 		int _lineno;
 		int _column;
