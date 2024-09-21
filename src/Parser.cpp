@@ -108,7 +108,7 @@ ParseResult Parser::parseStatement()
 		return parseDrop();
 	}
 
-	return { false, _tokenizer.getErrorString("unrecognized statement " + token) };
+	return { false, _tokenizer.getErrorString("unrecognized statement " + token, 1) };
 }
 
 // select
