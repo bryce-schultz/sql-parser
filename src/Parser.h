@@ -10,10 +10,9 @@ namespace SQL
 
 	struct ParseResult
 	{
-		bool success;
-		std::string error;
-
-		Args args;
+		bool success      { false };
+		std::string error { "" };
+		Args args		  {};
 	};
 
 	class Parser

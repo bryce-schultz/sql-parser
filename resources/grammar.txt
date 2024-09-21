@@ -1,0 +1,58 @@
+Grammar definition for this subset of sql.
+Recursive decent requires ll(k) or that has no left recursion.
+This will be an ll(1) parser.
+
+CAPS = terminals
+lowercase = non-terminals
+
+Tokens:
+IDENTIFIER = [_A-Za-z]+[_A-Za-z0-9]*
+STRING_LITERAL = "[^"]*"
+INTEGER_LITERAL = [0-9]+
+FLOAT_LITERAL = [0-9]*\.[0-9]+f?
+SELECT = "select"
+DELETE = "delete"
+DROP = "drop"
+TABLE = "table"
+FROM = "from"
+WHERE = "where"
+EXISTS = "exists"
+LIKE = "like"
+
+start     : stmts
+
+stmts     : stmt stmts
+          | stmt
+          | lambda
+
+stmt      : select
+          | delete
+          | drop
+          | error
+
+select    : select' where ';'
+          | select' ';'
+
+select'   : SELECT * from
+
+delete    : delete' where ';'
+          | delete' ';'
+
+delete'   : DELETE from
+
+drop      : DROP TABLE IDENTIFIER ';'
+
+from      : FROM IDENTIFIER
+
+where     : WHERE IDENTIFIER operator value
+          | WHERE IDENTIFIER EXISTS
+
+operator  : '='
+          | '!='
+          | '<='
+          | '>='
+          | LIKE
+
+value     : STRING_LITERAL
+          | INTEGER_LITERAL
+          | FLOAT_LITERAL

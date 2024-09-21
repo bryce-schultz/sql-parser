@@ -139,9 +139,33 @@ std::string SQL::Tokenizer::getErrorString(const std::string &message, int addit
 		error += "Error " + _filename + ":" + std::to_string(_lineno) + ":" + std::to_string(error_start) + "\n";
 	}
 
-	error += _current_line + "\n";
+	for (int i = 0; i < _current_line.size(); ++i)
+	{
+		if (i >= error_start - 1 && i <= error_start + _token.size() - 2)
+		{
+			error += COLOR_RED;
+		}
 
-	for (int i = 0; i < error_start - 1; i++)
+		if (_current_line[i] == '\t')
+		{
+			error += "    ";
+		}
+		else
+		{
+			error += _current_line[i];
+		}
+
+		if (i >= error_start - 1 && i <= error_start + _token.size() - 2)
+		{
+			error += COLOR_RESET;
+		}
+	}
+
+	error += "\n";
+
+	//error += _current_line + "\n";
+
+	for (int i = 0; i < error_start - 1; ++i)
 	{
 		error += " ";
 	}

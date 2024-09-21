@@ -79,7 +79,6 @@ ParseResult Parser::parseStatement()
 
 	if (token == ";")
 	{
-		_tokenizer.next();
 		return { false, unexpectedSemicolon() };
 	}
 
@@ -118,7 +117,6 @@ ParseResult Parser::parseSelect()
 
 	if (token == ";")
 	{
-		_tokenizer.next();
 		return { false, unexpectedSemicolon() };
 	}
 		
@@ -131,7 +129,6 @@ ParseResult Parser::parseSelect()
 
 	if (token == ";")
 	{
-		_tokenizer.next();
 		return { false, unexpectedSemicolon() };
 	}
 	
@@ -145,7 +142,6 @@ ParseResult Parser::parseSelect()
 
 	if (token == ";")
 	{
-		_tokenizer.next();
 		return { false, unexpectedSemicolon() };
 	}
 
@@ -187,7 +183,6 @@ ParseResult Parser::parseSelect()
 
 	if (token != ";")
 	{
-		_tokenizer.next();
 		return { false, expected(";") };
 	}
 
@@ -218,7 +213,6 @@ ParseResult Parser::parseDelete()
 
 	if (token == ";")
 	{
-		_tokenizer.next();
 		return { false, unexpectedSemicolon() };
 	}
 
@@ -231,7 +225,6 @@ ParseResult Parser::parseDelete()
 
 	if (token == ";")
 	{
-		_tokenizer.next();
 		return { false, unexpectedSemicolon() };
 	}
 
@@ -296,7 +289,6 @@ ParseResult Parser::parseDrop()
 
 	if (token == ";")
 	{
-		_tokenizer.next();
 		return { false, unexpectedSemicolon() };
 	}
 
@@ -316,7 +308,6 @@ ParseResult Parser::parseDrop()
 
 	if (token == ";")
 	{
-		_tokenizer.next();
 		return { false, unexpectedSemicolon() };
 	}
 
@@ -336,7 +327,6 @@ ParseResult Parser::parseDrop()
 
 	if (token == ";")
 	{
-		_tokenizer.next();
 		return { false, unexpectedSemicolon() };
 	}
 
@@ -378,7 +368,6 @@ ParseResult Parser::parseFrom()
 
 	if (token == ";")
 	{
-		_tokenizer.next();
 		return { false, unexpectedSemicolon() };
 	}
 
@@ -414,7 +403,6 @@ ParseResult Parser::parseWhere()
 
 	if (token == ";")
 	{
-		_tokenizer.next();
 		return { false, unexpectedSemicolon() };
 	}
 
@@ -429,7 +417,6 @@ ParseResult Parser::parseWhere()
 
 	if (token == ";")
 	{
-		_tokenizer.next();
 		return { false, unexpectedSemicolon() };
 	}
 
@@ -444,7 +431,6 @@ ParseResult Parser::parseWhere()
 
 	if (token == ";")
 	{
-		_tokenizer.next();
 		return { false, unexpectedSemicolon() };
 	}
 
@@ -455,7 +441,16 @@ ParseResult Parser::parseWhere()
 
 std::string Parser::unexpectedSemicolon()
 {
-	return _tokenizer.getErrorString("unexpected ;");
+	const int desired_space = 2;
+
+	int whitespace = _tokenizer.getTrailingspace();
+	if (!_tokenizer.peek().empty())
+	{
+		const int non_empty_space = 1;
+		whitespace = non_empty_space;
+	}
+
+	return _tokenizer.getErrorString("unexpected ;", desired_space - whitespace);
 }
 
 std::string Parser::expected(const std::string &expected)
