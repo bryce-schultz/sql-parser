@@ -30,4 +30,4 @@ To build the project open the visual studio solution file and click build. You c
 To test the project run pytest in the root directory or test folder. The code will try to build before the tests run so it is always the latest build. Most or all tests will fail if the build fails.
 
 ## Warning
-Ensure your path contains `MSBuild.exe` as its needed for building the project.
+Ensure your path contains `MSBuild.exe` as it is needed for building the project.
