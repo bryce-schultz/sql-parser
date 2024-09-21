@@ -189,7 +189,7 @@ ParseResult Parser::parseSelect()
 
 	_tokenizer.next();
 
-	return { true, "", { "success" } };
+	return { true, "", { COLOR_GREEN + "success" } };
 }
 
 ParseResult Parser::parseInsert()
@@ -247,7 +247,7 @@ ParseResult Parser::parseDelete()
 	if (token == ";")
 	{
 		_tokenizer.next();
-		return { true, "", { "success" } };
+		return { true, "", { COLOR_GREEN + "success" } };
 	}
 
 	if (token != "where")
@@ -272,7 +272,7 @@ ParseResult Parser::parseDelete()
 
 	_tokenizer.next();
 
-	return { true, "", { "success" } };
+	return { true, "", { COLOR_GREEN + "success" } };
 }
 
 ParseResult Parser::parseCreate()
@@ -347,7 +347,7 @@ ParseResult Parser::parseDrop()
 
 	_tokenizer.next();
 
-	return { true, "", { "success"}};
+	return { true, "", { COLOR_GREEN + "success"}};
 }
 
 ParseResult Parser::parseFrom()
@@ -455,5 +455,11 @@ std::string Parser::unexpectedSemicolon()
 
 std::string Parser::expected(const std::string &expected)
 {
-	return _tokenizer.getErrorString("expected " + expected, 1);
+	auto value = _tokenizer.getTrailingspace();
+	if (!_tokenizer.peek().empty())
+	{
+		value = 1;
+	}
+
+	return _tokenizer.getErrorString("expected " + expected, 2 - value);
 }

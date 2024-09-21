@@ -1,6 +1,9 @@
 import pytest
 import subprocess
 import os
+import re
+
+ansi_escape = re.compile(r'\x1b\[[0-9;]*m')
 
 def runCmd(cmd):
     print(f'Running command: {cmd}')
@@ -12,7 +15,10 @@ class Parser:
 
     def parse(self, sql):
         result = runCmd(f'echo {sql}| "{self.parser_executable}"')
-        return result.stdout.decode('utf-8'), result.stderr.decode('utf-8')
+        return self._remove_color(result.stdout.decode('utf-8')), self._remove_color(result.stderr.decode('utf-8'))
+    
+    def _remove_color(self, text):
+        return ansi_escape.sub('', text)
 
 @pytest.fixture(scope='session')
 def parser():

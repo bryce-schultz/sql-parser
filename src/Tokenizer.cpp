@@ -1,5 +1,9 @@
 #include "Tokenizer.h"
 
+const std::string COLOR_RED = "\033[1;31m";
+const std::string COLOR_RESET = "\033[0m";
+const std::string COLOR_GREEN = "\033[1;32m";
+
 SQL::Tokenizer::Tokenizer():
 	_filename(""),
 	_original_input(""),
@@ -44,6 +48,7 @@ std::string SQL::Tokenizer::next()
 			{
 				_column++;
 				_current_line += " ";
+				_trailingspace++;
 				_input.erase(0, 1);
 				continue;
 			}
@@ -56,6 +61,7 @@ std::string SQL::Tokenizer::next()
 		{
 			_column += 4;
 			_current_line += "    ";
+			_trailingspace += 4;
 			_input.erase(0, 1);
 			continue;
 		}
@@ -69,6 +75,7 @@ std::string SQL::Tokenizer::next()
 			_lineno++;
 			_column = 1;
 			_current_line.clear();
+			_trailingspace = 0;
 			_input.erase(0, 1);
 			break;
 		}
@@ -78,6 +85,7 @@ std::string SQL::Tokenizer::next()
 			{
 				_column += 1;
 				token = _input[0];
+				_trailingspace = 0;
 				_current_line += _input[0];
 				_input.erase(0, 1);
 				break;
@@ -91,6 +99,7 @@ std::string SQL::Tokenizer::next()
 		{
 			token += _input[0];
 			_column++;
+			_trailingspace = 0;
 			_current_line += _input[0];
 			_input.erase(0, 1);
 		}
@@ -100,11 +109,25 @@ std::string SQL::Tokenizer::next()
 	return _token;
 }
 
-std::string SQL::Tokenizer::getErrorString(const std::string &message, int additional_space) const
+int SQL::Tokenizer::getTrailingspace() const
 {
-	int error_start = (_column - _token.size() - 1) + additional_space;
-	std::string error;
+	return _trailingspace;
+}
 
+std::string SQL::Tokenizer::getErrorString(const std::string &message, int additional_space)
+{
+	// get the rest of the line
+	while(!_input.empty() && _input[0] != '\n' && _input[0] != EOF)
+	{
+		_current_line += _input[0];
+		_input.erase(0, 1);
+	}
+
+	// find the start of the error
+	int error_start = (_column - _token.size() - 1) + additional_space;
+
+	// build the error string
+	std::string error;
 	if (_filename.empty())
 	{
 		error += "Error " + std::to_string(_lineno) + ":" + std::to_string(error_start) + "\n";
@@ -125,7 +148,7 @@ std::string SQL::Tokenizer::getErrorString(const std::string &message, int addit
 
 	if (!message.empty())
 	{
-		error += message + "\n";
+		error += COLOR_RED + message + COLOR_RESET + "\n";
 	}
 
 	return error;
