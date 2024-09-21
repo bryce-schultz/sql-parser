@@ -23,6 +23,12 @@ int main(int argc, char **argv)
 		do
 		{
 			std::getline(std::cin, input);
+
+			if (input.empty() || input == "exit")
+			{
+				break;
+			}
+
 			Parser parser;
 			auto result = parser.parse(input);
 

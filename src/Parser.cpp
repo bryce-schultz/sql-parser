@@ -460,11 +460,14 @@ std::string Parser::unexpectedSemicolon()
 
 std::string Parser::expected(const std::string &expected)
 {
-	auto value = _tokenizer.getTrailingspace();
+	const int desired_space = 2;
+
+	int whitespace = _tokenizer.getTrailingspace();
 	if (!_tokenizer.peek().empty())
 	{
-		value = 1;
+		const int non_empty_space = 1;
+		whitespace = non_empty_space;
 	}
 
-	return _tokenizer.getErrorString("expected " + expected, 2 - value);
+	return _tokenizer.getErrorString("expected " + expected, desired_space - whitespace);
 }
