@@ -4,7 +4,7 @@
 
 using namespace SQL;
 
-#define SUCCESS return { true, "", { COLOR_GREEN + "success" + COLOR_RESET } }
+#define SUCCESS return { true, "", { COLOR_GREEN + "\nsuccess\n" + COLOR_RESET } }
 
 Parser::Parser():
 	_tokenizer()

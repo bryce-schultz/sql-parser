@@ -1,6 +1,6 @@
 def test_semicolon_as_statement(parser):
     sql = ';'
-    expected_error = 'Error 1:1\r\n;\r\n^\r\nunexpected ;\r\n\r\n'
+    expected_error = '\r\nError 1:1\r\n;\r\n^\r\nunexpected ;\r\n\r\n'
 
     result, error = parser.parse(sql)
 

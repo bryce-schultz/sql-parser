@@ -1,7 +1,7 @@
 def test_invalid_statement(parser):
     sql = 'nonsense'
     expected_redult = ''
-    expected_error = 'Error 1:1\r\nnonsense\r\n^\r\nunrecognized statement nonsense\r\n\r\n'
+    expected_error = '\r\nError 1:1\r\nnonsense\r\n^\r\nunrecognized statement nonsense\r\n\r\n'
 
     result, error = parser.parse(sql)
 
@@ -15,7 +15,7 @@ def test_invalid_statement(parser):
 def test_invalid_statement_with_semicolon(parser):
     sql = 'nonsense;'
     expected_redult = ''
-    expected_error = 'Error 1:1\r\nnonsense;\r\n^\r\nunrecognized statement nonsense\r\n\r\n'
+    expected_error = '\r\nError 1:1\r\nnonsense;\r\n^\r\nunrecognized statement nonsense\r\n\r\n'
 
     result, error = parser.parse(sql)
 
@@ -29,7 +29,7 @@ def test_invalid_statement_with_semicolon(parser):
 def test_invalid_statement_with_semicolon_and_whitespace(parser):
     sql = 'nonsense; '
     expected_redult = ''
-    expected_error = 'Error 1:1\r\nnonsense; \r\n^\r\nunrecognized statement nonsense\r\n\r\n'
+    expected_error = '\r\nError 1:1\r\nnonsense; \r\n^\r\nunrecognized statement nonsense\r\n\r\n'
 
     result, error = parser.parse(sql)
 

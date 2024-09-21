@@ -3,6 +3,13 @@
 const std::string COLOR_RED = "\033[1;31m";
 const std::string COLOR_RESET = "\033[0m";
 const std::string COLOR_GREEN = "\033[1;32m";
+const std::string COLOR_LIGHT_GREY = COLOR_RGB(100, 100, 100);
+const std::string DECORATION_STRIKETHROUGH = "\033[9m";
+
+std::string COLOR_RGB(int r, int g, int b)
+{
+	return "\033[38;2;" + std::to_string(r) + ";" + std::to_string(g) + ";" + std::to_string(b) + "m";
+}
 
 SQL::Tokenizer::Tokenizer():
 	_filename(""),
@@ -132,15 +139,21 @@ std::string SQL::Tokenizer::getErrorString(const std::string &message, int addit
 	std::string error;
 	if (_filename.empty())
 	{
-		error += "Error " + std::to_string(_lineno) + ":" + std::to_string(error_start) + "\n";
+		error += "\nError " + std::to_string(_lineno) + ":" + std::to_string(error_start) + "\n";
 	}
 	else
 	{
-		error += "Error " + _filename + ":" + std::to_string(_lineno) + ":" + std::to_string(error_start) + "\n";
+		error += "\nError " + _filename + ":" + std::to_string(_lineno) + ":" + std::to_string(error_start) + "\n";
 	}
-
+	bool striketrough = false;
 	for (int i = 0; i < _current_line.size(); ++i)
 	{
+		if (!striketrough && i > error_start + _token.size() - 2)
+		{
+			error += COLOR_LIGHT_GREY;
+			striketrough = true;
+		}
+
 		if (i >= error_start - 1 && i <= error_start + _token.size() - 2)
 		{
 			error += COLOR_RED;
@@ -161,9 +174,12 @@ std::string SQL::Tokenizer::getErrorString(const std::string &message, int addit
 		}
 	}
 
-	error += "\n";
+	if (striketrough)
+	{
+		error += COLOR_RESET;
+	}
 
-	//error += _current_line + "\n";
+	error += "\n";
 
 	for (int i = 0; i < error_start - 1; ++i)
 	{

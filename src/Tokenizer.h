@@ -5,6 +5,9 @@
 extern const std::string COLOR_RED;
 extern const std::string COLOR_RESET;
 extern const std::string COLOR_GREEN;
+extern const std::string DECORATION_STRIKETHROUGH;
+
+extern std::string COLOR_RGB(int r, int g, int b);
 
 namespace SQL
 {

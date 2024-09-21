@@ -1,6 +1,6 @@
 def test_correct_drop_statement(parser):
     sql = 'drop table name;'
-    expected_result = 'success\r\n'
+    expected_result = '\r\nsuccess\r\n\r\n'
     expected_error = ''
 
     result, error = parser.parse(sql)
@@ -13,7 +13,7 @@ def test_correct_drop_statement(parser):
 
 def test_two_correct_drop_statements(parser):
     sql = 'drop table name; drop table name2;'
-    expected_result = 'success\r\nsuccess\r\n'
+    expected_result = '\r\nsuccess\r\n\r\n\r\nsuccess\r\n\r\n'
     expected_error = ''
 
     result, error = parser.parse(sql)
