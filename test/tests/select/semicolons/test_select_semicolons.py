@@ -85,11 +85,12 @@ def test_semicolon_after_select_star_from_table_where_id_eq(parser):
 def test_semicolon_after_select_star_from_table_where_id_eq_1(parser):
     sql = 'select * from table where id = 1;'
     expected_error = 'Error 1:33\r\nselect * from table where id = 1;\r\n                                ^\r\nunexpected ;\r\n\r\n'
+    expected_result = 'success\r\n'
 
     result, error = parser.parse(sql)
 
     print(result)
     print(error)
 
-    assert result == ''
+    assert result == expected_result
     assert error != expected_error

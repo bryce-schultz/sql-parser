@@ -4,16 +4,14 @@ import os
 
 def runCmd(cmd):
     print(f'Running command: {cmd}')
-    print(cmd)
-    return subprocess.run(["bash", "-c", cmd], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    return subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 class Parser:
     def __init__(self, parser_executable):
         self.parser_executable = parser_executable
 
     def parse(self, sql):
-        print(f'echo {sql} | {self.parser_executable}')
-        result = runCmd(f'echo "{sql}" | "{self.parser_executable}"')
+        result = runCmd(f'echo {sql}| "{self.parser_executable}"')
         return result.stdout.decode('utf-8'), result.stderr.decode('utf-8')
 
 @pytest.fixture(scope='session')

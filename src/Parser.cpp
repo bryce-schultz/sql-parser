@@ -27,8 +27,6 @@ ParseResult Parser::parse(const std::string &input)
 		return { true, "", result.args };
 	}
 
-	std::cerr << result.error << std::endl;
-
 	return { false, result.error };
 }
 
@@ -41,14 +39,33 @@ ParseResult Parser::parseStatements()
 		return { true };
 	}
 
+	Args args;
+
 	auto result = parseStatement();
 
-	if (result.success)
+	if (!result.success)
 	{
-		return parseStatements();
+		return { false, result.error };
 	}
 
-	return { false, result.error };
+	for (const auto &arg : result.args)
+	{
+		args.push_back(arg);
+	}
+
+	result = parseStatements();
+
+	if (!result.success)
+	{
+		return { false, result.error };
+	}
+
+	for (const auto &arg : result.args)
+	{
+		args.push_back(arg);
+	}
+
+	return { true, "", args };
 }
 
 ParseResult Parser::parseStatement()
@@ -58,6 +75,12 @@ ParseResult Parser::parseStatement()
 	if (token.empty())
 	{
 		return { false };
+	}
+
+	if (token == ";")
+	{
+		_tokenizer.next();
+		return { false, unexpectedSemicolon() };
 	}
 
 	if (token == "select")
@@ -83,13 +106,6 @@ ParseResult Parser::parseStatement()
 	else if (token == "drop")
 	{
 		return parseDrop();
-	}
-
-	_tokenizer.next();
-
-	if (token == ";")
-	{
-		return { false, unexpectedSemicolon() };
 	}
 
 	return { false, _tokenizer.getErrorString("unrecognized statement " + token) };
@@ -167,10 +183,13 @@ ParseResult Parser::parseSelect()
 
 	if (token != ";")
 	{
+		_tokenizer.next();
 		return { false, expected(";") };
 	}
 
-	return { true, "" };
+	_tokenizer.next();
+
+	return { true, "", { "success" } };
 }
 
 ParseResult Parser::parseInsert()

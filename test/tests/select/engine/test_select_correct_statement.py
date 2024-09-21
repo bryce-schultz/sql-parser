@@ -1,6 +1,6 @@
 def test_select_correct_statement(parser):
     sql = 'select * from table where column = 1;'
-    expected_result = ''
+    expected_result = 'success\r\n'
     expected_error = ''
 
     result, error = parser.parse(sql)
@@ -13,7 +13,7 @@ def test_select_correct_statement(parser):
 
 def test_select_two_correct_statements(parser):
     sql = 'select * from table where column = 1; select * from table where column = 2;'
-    expected_result = ''
+    expected_result = 'success\r\nsuccess\r\n'
     expected_error = ''
 
     result, error = parser.parse(sql)

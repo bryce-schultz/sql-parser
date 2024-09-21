@@ -46,7 +46,5 @@ int main(int argc, char **argv)
 		} while (!input.empty() && input != "exit");
 	}
 
-	
-
 	return 0;
 }
