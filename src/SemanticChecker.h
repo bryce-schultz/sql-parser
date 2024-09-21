@@ -15,9 +15,7 @@ struct SemanticResult
 	bool success { true };
 	std::string error { "" };
 	std::string message { "" };
-};
-
-	    
+};    
 
 class SemanticCheck
 {

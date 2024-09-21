@@ -71,4 +71,3 @@ namespace SQL
 		extern TableNameIsNotKeywordSemanticCheck table_name_is_not_keyword_semantic_check;
 	}
 }
-
