@@ -204,7 +204,75 @@ ParseResult Parser::parseUpdate()
 
 ParseResult Parser::parseDelete()
 {
-	return ParseResult();
+	auto token = _tokenizer.peek();
+
+	if (token.empty())
+	{
+		return { false, expected("delete") };
+	}
+
+	if (token == ";")
+	{
+		_tokenizer.next();
+		return { false, unexpectedSemicolon() };
+	}
+
+	if (token != "delete")
+	{
+		return { false, expected("delete") };
+	}
+
+	token = _tokenizer.next();
+
+	if (token == ";")
+	{
+		_tokenizer.next();
+		return { false, unexpectedSemicolon() };
+	}
+
+	if (token != "from")
+	{
+		return { false, expected("from") };
+	}
+
+	auto result = parseFrom();
+
+	if (!result.success)
+	{
+		return { false, result.error };
+	}
+
+	token = _tokenizer.peek();
+
+	if (token == ";")
+	{
+		_tokenizer.next();
+		return { true, "", { "success" } };
+	}
+
+	if (token != "where")
+	{
+		return { false, expected("where") };
+	}
+
+	result = parseWhere();
+
+	if (!result.success)
+	{
+		return { false, result.error };
+	}
+
+	token = _tokenizer.peek();
+
+	if (token != ";")
+	{
+		_tokenizer.next();
+		return { false, expected(";") };
+	}
+
+	_tokenizer.next();
+
+	return { true, "", { "success" } };
 }
 
 ParseResult Parser::parseCreate()
@@ -288,7 +356,7 @@ ParseResult Parser::parseFrom()
 
 	if (token.empty())
 	{
-		return { false, expected("a table name") };
+		return { false, expected("from") };
 	}
 
 	if (token != "from")
@@ -296,9 +364,7 @@ ParseResult Parser::parseFrom()
 		return { false, expected("from")};
 	}
 
-	_tokenizer.next();
-
-	token = _tokenizer.peek();
+	token = _tokenizer.next();
 
 	if (token.empty())
 	{
@@ -311,9 +377,11 @@ ParseResult Parser::parseFrom()
 		return { false, unexpectedSemicolon() };
 	}
 
+	std::string table_name = token;
+
 	_tokenizer.next();
 
-	return { true, "", { token } };
+	return { true, "", { table_name } };
 }
 
 ParseResult Parser::parseWhere()

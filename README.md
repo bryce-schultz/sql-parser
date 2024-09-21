@@ -1,6 +1,6 @@
 # SQL Parser
 - [x] select
-- [ ] delete
+- [x] delete
 - [ ] create
 - [ ] insert
 - [ ] update
