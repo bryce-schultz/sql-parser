@@ -4,7 +4,6 @@
 - [ ] create
 - [ ] insert
 - [ ] update
-- [ ] delete
 - [x] drop
 
 # SQL Evaluator
@@ -13,5 +12,4 @@
 - [ ] create
 - [ ] insert
 - [ ] update
-- [ ] delete
 - [ ] drop
