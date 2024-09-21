@@ -279,7 +279,114 @@ ParseResult Parser::parseDelete()
 
 ParseResult Parser::parseCreate()
 {
-	return ParseResult();
+	auto token = _tokenizer.peek();
+
+	if (token.empty())
+	{
+		return { false, expected("create") };
+	}
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	if (token != "create")
+	{
+		return { false, expected("create") };
+	}
+
+	token = _tokenizer.next();
+
+	if (token.empty())
+	{
+		return { false, expected("table") };
+	}
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	if (token != "table")
+	{
+		return { false, expected("table") };
+	}
+
+	token = _tokenizer.next();
+
+	if (token.empty())
+	{
+		return { false, expected("a table name") };
+	}
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	auto semantic_check = SQL::globals::table_name_is_not_keyword_semantic_check.check(token);
+
+	if (!semantic_check.success)
+	{
+		return { false, semanticError(semantic_check.error) };
+	}
+
+	token = _tokenizer.next();
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	if (token != "(")
+	{
+		return { false, expected("(") };
+	}
+
+	token = _tokenizer.next();
+
+	if (token.empty())
+	{
+		return { false, expected("a type") };
+	}
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	auto result = parseSchema();
+
+	if (!result.success)
+	{
+		return { false, result.error };
+	}
+
+	token = _tokenizer.peek();
+
+	if (token != ")")
+	{
+		return { false, expected(")") };
+	}
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	_tokenizer.next();
+
+	token = _tokenizer.peek();
+
+	if (token != ";")
+	{
+		return { false, expected(";") };
+	}
+
+	_tokenizer.next();
+
+	SUCCESS;
 }
 
 ParseResult Parser::parseDrop()
@@ -438,6 +545,143 @@ ParseResult Parser::parseWhere()
 	return { true, "", { token } };
 }
 
+ParseResult SQL::Parser::parseSchema()
+{
+	auto token = _tokenizer.peek();
+
+	if (token.empty())
+	{
+		return { false, expected("a type") };
+	}
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	Args args;
+
+	auto result = parseScheme();
+
+	if (!result.success)
+	{
+		return { false, result.error };
+	}
+
+	for (const auto &arg : result.args)
+	{
+		args.push_back(arg);
+	}
+
+	token = _tokenizer.peek();
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	if (token == ")")
+	{
+		return { true, "", result.args };
+	}
+
+	if (token != ",")
+	{
+		return { false, expected(",") };
+	}
+
+	_tokenizer.next();
+
+	result = parseSchema();
+
+	if (!result.success)
+	{
+		return { false, result.error };
+	}
+
+	for (const auto &arg : result.args)
+	{
+		args.push_back(arg);
+	}
+
+	return { true, "", args };
+}
+
+ParseResult SQL::Parser::parseScheme()
+{
+	auto result = parseType();
+
+	if (!result.success)
+	{
+		return { false, result.error };
+	}
+
+	if (result.args.empty())
+	{
+		return { false, devError("parseType must return a value if it succeeds!") };
+	}
+
+	std::string type = result.args[0];
+
+	auto token = _tokenizer.peek();
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	if (token.empty())
+	{
+		return { false, expected("a column name") };
+	}
+
+	if (token == ")")
+	{
+		return { false, expected("a column name") };
+	}
+
+	//auto semantic_check = SQL::globals::is_valid_identifier.check(token);
+
+	//if (!semantic_check.success)
+	//{
+	//	return { false, semanticError(semantic_check.error) };
+	//}
+
+	std::string column_name = token;
+
+	token = _tokenizer.next();
+
+	return { true, "", { type, column_name } };
+}
+
+ParseResult SQL::Parser::parseType()
+{
+	auto token = _tokenizer.peek();
+
+	if (token.empty())
+	{
+		return { false, expected("a type") };
+	}
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	auto semantic_check = SQL::globals::type_is_valid_semantic_check.check(token);
+
+	if (!semantic_check.success)
+	{
+		return { false, semanticError(semantic_check.error) };
+	}
+
+	std::string type = token;
+
+	_tokenizer.next();
+
+	return { true, "", { type } };
+}
+
 std::string Parser::unexpectedSemicolon()
 {
 	const int desired_space = 2;
@@ -459,7 +703,15 @@ std::string Parser::expected(const std::string &expected)
 	// Add custom spacing for certain tokens here
 	if (
 		expected == ";" || 
-		expected == ")")
+		expected == ")" ||
+		expected == ",")
+	{
+		desired_space = 1;
+	}
+
+	std::string previous_token = _tokenizer.getPreviousToken();
+
+	if (previous_token == "(")
 	{
 		desired_space = 1;
 	}
@@ -477,4 +729,9 @@ std::string Parser::expected(const std::string &expected)
 std::string SQL::Parser::semanticError(const std::string &message)
 {
 	return _tokenizer.getErrorString(message, 1);
+}
+
+std::string SQL::Parser::devError(const std::string &message)
+{
+	return _tokenizer.getErrorString("[DEV] " + message);
 }

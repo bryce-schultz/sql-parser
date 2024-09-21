@@ -36,9 +36,14 @@ namespace SQL
 
 		ParseResult parseFrom();
 		ParseResult parseWhere();
+		ParseResult parseSchema();
+		ParseResult parseScheme();
+
+		ParseResult parseType();
 
 		std::string unexpectedSemicolon();
 		std::string expected(const std::string &expected);
 		std::string semanticError(const std::string &message);
+		std::string devError(const std::string &message);
 	};
 }

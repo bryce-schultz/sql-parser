@@ -33,6 +33,7 @@ namespace SQL
 		std::string next();
 
 		int getTrailingspace() const;
+		std::string getPreviousToken() const;
 
 		std::string getErrorString(const std::string &message = "", int additional_space = 0);
 		std::string getWarningString(const std::string &message = "", int additional_space = 0);
@@ -45,6 +46,7 @@ namespace SQL
 		std::string _original_input;
 		std::string _input;
 		std::string _token;
+		std::string _previous_token;
 		std::string _current_line;
 
 		int _trailingspace;

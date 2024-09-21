@@ -10,6 +10,8 @@ IDENTIFIER = [_A-Za-z]+[_A-Za-z0-9]*
 STRING_LITERAL = "[^"]*"
 INTEGER_LITERAL = [0-9]+
 FLOAT_LITERAL = [0-9]*\.[0-9]+f?
+BOOL_LITERAL = (true|false)
+CHAR_LITERAL = '[^'].'
 SELECT = "select"
 DELETE = "delete"
 DROP = "drop"
@@ -18,6 +20,7 @@ FROM = "from"
 WHERE = "where"
 EXISTS = "exists"
 LIKE = "like"
+CREATE = "create"
 
 start     : stmts
 
@@ -28,6 +31,7 @@ stmts     : stmt stmts
 stmt      : select
           | delete
           | drop
+          | create
           | error
 
 select    : select' where ';'
@@ -42,6 +46,13 @@ delete'   : DELETE from
 
 drop      : DROP TABLE IDENTIFIER ';'
 
+create    : CREATE TABLE IDENTIFIER '(' schema ')' ';'
+
+schema    : schema, scheme
+          | scheme            // note can't be empty.
+
+scheme    : type IDENTIFIER
+
 from      : FROM IDENTIFIER
 
 where     : WHERE IDENTIFIER operator value
@@ -53,6 +64,14 @@ operator  : '='
           | '>='
           | LIKE
 
-value     : STRING_LITERAL
-          | INTEGER_LITERAL
+value     : INTEGER_LITERAL
           | FLOAT_LITERAL
+          | STRING_LITERAL
+          | BOOL_LITERAL
+          | CHAR_LITERAL
+
+type      : INT
+          | FLOAT
+          | STRING
+          | BOOL
+          | CHAR
