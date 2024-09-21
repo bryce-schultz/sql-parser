@@ -35,7 +35,7 @@ def test_semicolon_after_select_star_from(parser):
     assert error == expected_error
 
 def test_semicolon_after_select_star_from_table(parser):
-    sql = 'select * from table;'
+    sql = 'select * from users;'
     expectred_result = '\r\nsuccess\r\n\r\n'
     expected_error = ''
 
@@ -48,8 +48,8 @@ def test_semicolon_after_select_star_from_table(parser):
     assert error == expected_error
 
 def test_semicolon_after_select_star_from_table_where(parser):
-    sql = 'select * from table where;'
-    expected_error = '\r\nError 1:26\r\nselect * from table where;\r\n                         ^\r\nunexpected ;\r\n\r\n'
+    sql = 'select * from users where;'
+    expected_error = '\r\nError 1:26\r\nselect * from users where;\r\n                         ^\r\nunexpected ;\r\n\r\n'
 
     result, error = parser.parse(sql)
 
@@ -60,8 +60,8 @@ def test_semicolon_after_select_star_from_table_where(parser):
     assert error == expected_error
 
 def test_semicolon_after_select_star_from_table_where_id(parser):
-    sql = 'select * from table where id;'
-    expected_error = '\r\nError 1:29\r\nselect * from table where id;\r\n                            ^\r\nunexpected ;\r\n\r\n'
+    sql = 'select * from users where id;'
+    expected_error = '\r\nError 1:29\r\nselect * from users where id;\r\n                            ^\r\nunexpected ;\r\n\r\n'
 
     result, error = parser.parse(sql)
 
@@ -72,8 +72,8 @@ def test_semicolon_after_select_star_from_table_where_id(parser):
     assert error == expected_error
 
 def test_semicolon_after_select_star_from_table_where_id_eq(parser):
-    sql = 'select * from table where id =;'
-    expected_error = '\r\nError 1:31\r\nselect * from table where id =;\r\n                              ^\r\nunexpected ;\r\n\r\n'
+    sql = 'select * from users where id =;'
+    expected_error = '\r\nError 1:31\r\nselect * from users where id =;\r\n                              ^\r\nunexpected ;\r\n\r\n'
 
     result, error = parser.parse(sql)
 
@@ -84,7 +84,7 @@ def test_semicolon_after_select_star_from_table_where_id_eq(parser):
     assert error == expected_error
 
 def test_semicolon_after_select_star_from_table_where_id_eq_1(parser):
-    sql = 'select * from table where id = 1;'
+    sql = 'select * from users where id = 1;'
     expected_error = ''
     expected_result = '\r\nsuccess\r\n\r\n'
 
