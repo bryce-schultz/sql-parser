@@ -111,6 +111,7 @@ ParseResult Parser::parseStatement()
 	return { false, _tokenizer.getErrorString("unrecognized statement " + token) };
 }
 
+// select
 ParseResult Parser::parseSelect()
 {
 	auto token = _tokenizer.peek();
@@ -133,12 +134,13 @@ ParseResult Parser::parseSelect()
 		_tokenizer.next();
 		return { false, unexpectedSemicolon() };
 	}
-
+	
 	if (token != "*")
 	{
 		return { false, expected("*") };
 	}
 
+	// select *
 	token = _tokenizer.next();
 
 	if (token == ";")
@@ -152,6 +154,7 @@ ParseResult Parser::parseSelect()
 		return { false, expected("from") };
 	}
 
+	// select * from table
 	auto result = parseFrom();
 
 	if (!result.success)
@@ -164,7 +167,7 @@ ParseResult Parser::parseSelect()
 	if (token == ";")
 	{
 		_tokenizer.next();
-		return { false, unexpectedSemicolon() };
+		return { true, "", { COLOR_GREEN + "success" } };
 	}
 
 	if (token != "where")
@@ -172,6 +175,7 @@ ParseResult Parser::parseSelect()
 		return { false, expected("where") };
 	}
 
+	// select * from table where
 	result = parseWhere();
 
 	if (!result.success)
@@ -187,6 +191,7 @@ ParseResult Parser::parseSelect()
 		return { false, expected(";") };
 	}
 
+	// select * from table where field operator value ;
 	_tokenizer.next();
 
 	return { true, "", { COLOR_GREEN + "success" } };

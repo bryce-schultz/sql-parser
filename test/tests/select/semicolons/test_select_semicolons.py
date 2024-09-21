@@ -36,14 +36,15 @@ def test_semicolon_after_select_star_from(parser):
 
 def test_semicolon_after_select_star_from_table(parser):
     sql = 'select * from table;'
-    expected_error = 'Error 1:20\r\nselect * from table;\r\n                   ^\r\nunexpected ;\r\n\r\n'
+    expectred_result = 'success\r\n'
+    expected_error = ''
 
     result, error = parser.parse(sql)
 
     print(result)
     print(error)
 
-    assert result == ''
+    assert result == expectred_result
     assert error == expected_error
 
 def test_semicolon_after_select_star_from_table_where(parser):
