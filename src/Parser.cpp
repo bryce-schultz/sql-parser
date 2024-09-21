@@ -214,7 +214,14 @@ ParseResult Parser::parseCreate()
 
 ParseResult Parser::parseDrop()
 {
-	return ParseResult();
+	auto token = _tokenizer.peek();
+
+	if (token.empty())
+	{
+		return { false, expected("table") };
+	}
+
+
 }
 
 ParseResult Parser::parseFrom()
