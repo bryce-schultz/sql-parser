@@ -24,7 +24,7 @@ It uses a recursive decent strategy with a hand written tokenizer and parser. I 
 - [ ] drop
 
 ## Building
-To build the project open the visual studio solution file and click build.
+To build the project open the visual studio solution file and click build. You can also run `MSBuild.exe` in the src folder or `MSBuild.exe src` from the project directory.
 
 ## Testing
-To test the project run pytest in the root directory or test folder. You will need to have the project build to do this. There is a plan to add building to the test setup code.
+To test the project run pytest in the root directory or test folder. The code will try to build before the tests run so it is always the latest build. Most or all tests will fail if the build fails.
