@@ -218,10 +218,68 @@ ParseResult Parser::parseDrop()
 
 	if (token.empty())
 	{
+		return { false, expected("drop") };
+	}
+
+	if (token == ";")
+	{
+		_tokenizer.next();
+		return { false, unexpectedSemicolon() };
+	}
+
+	if (token != "drop")
+	{
+		return { false, expected("drop") };
+	}
+
+	_tokenizer.next();
+
+	token = _tokenizer.peek();
+
+	if (token.empty())
+	{
 		return { false, expected("table") };
 	}
 
+	if (token == ";")
+	{
+		_tokenizer.next();
+		return { false, unexpectedSemicolon() };
+	}
 
+	if (token != "table")
+	{
+		return { false, expected("table") };
+	}
+
+	_tokenizer.next();
+
+	token = _tokenizer.peek();
+
+	if (token.empty())
+	{
+		return { false, expected("a table name") };
+	}
+
+	if (token == ";")
+	{
+		_tokenizer.next();
+		return { false, unexpectedSemicolon() };
+	}
+
+	_tokenizer.next();
+
+	token = _tokenizer.peek();
+
+	if (token != ";")
+	{
+		_tokenizer.next();
+		return { false, expected(";") };
+	}
+
+	_tokenizer.next();
+
+	return { true, "", { "success"}};
 }
 
 ParseResult Parser::parseFrom()
