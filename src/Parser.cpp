@@ -471,7 +471,6 @@ std::string Parser::expected(const std::string &expected)
 	// Add custom spacing for certain tokens here
 	if (
 		expected == ";" || 
-		expected == "(" || 
 		expected == ")")
 	{
 		desired_space = 1;
