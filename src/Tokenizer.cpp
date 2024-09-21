@@ -4,6 +4,8 @@ const std::string COLOR_RED = "\033[1;31m";
 const std::string COLOR_RESET = "\033[0m";
 const std::string COLOR_GREEN = "\033[1;32m";
 const std::string COLOR_LIGHT_GREY = COLOR_RGB(100, 100, 100);
+const std::string COLOR_YELLOW = "\033[1;33m";
+const std::string COLOR_BLUE = "\033[1;34m";
 const std::string DECORATION_STRIKETHROUGH = "\033[9m";
 
 std::string COLOR_RGB(int r, int g, int b)
@@ -125,26 +127,50 @@ int SQL::Tokenizer::getTrailingspace() const
 
 std::string SQL::Tokenizer::getErrorString(const std::string &message, int additional_space)
 {
-	// get the rest of the line
-	while(!_input.empty() && _input[0] != '\n' && _input[0] != EOF)
-	{
-		_current_line += _input[0];
-		_input.erase(0, 1);
-	}
+	return getLevelString(ErrorLevel::ERROR, message, additional_space);
+}
+
+std::string SQL::Tokenizer::getWarningString(const std::string &message, int additional_space)
+{
+	return getLevelString(ErrorLevel::WARNING, message, additional_space);
+}
+
+std::string SQL::Tokenizer::getInfoString(const std::string &message, int additional_space)
+{
+	return getLevelString(ErrorLevel::INFO, message, additional_space);
+}
+
+std::string SQL::Tokenizer::getLevelString(ErrorLevel level, const std::string &message, int additional_space)
+{
+	static const std::map<ErrorLevel, std::string> level_strings = {
+		{ ErrorLevel::INFO,    "Info" },
+		{ ErrorLevel::WARNING, "Warning" },
+		{ ErrorLevel::ERROR,   "Error" }
+	};
+
+	static const std::map<ErrorLevel, std::string> level_colors = {
+		{ ErrorLevel::INFO,    COLOR_BLUE },
+		{ ErrorLevel::WARNING, COLOR_YELLOW },
+		{ ErrorLevel::ERROR,   COLOR_RED }
+	};
+
+	consumeRestOfLine();
 
 	// find the start of the error
 	int error_start = (_column - _token.size() - 1) + additional_space;
 
 	// build the error string
 	std::string error;
+	error += "\n" + level_strings.at(level) + " ";
 	if (_filename.empty())
 	{
-		error += "\nError " + std::to_string(_lineno) + ":" + std::to_string(error_start) + "\n";
+		 error += std::to_string(_lineno) + ":" + std::to_string(error_start) + "\n";
 	}
 	else
 	{
-		error += "\nError " + _filename + ":" + std::to_string(_lineno) + ":" + std::to_string(error_start) + "\n";
+		error += _filename + ":" + std::to_string(_lineno) + ":" + std::to_string(error_start) + "\n";
 	}
+
 	bool striketrough = false;
 	for (int i = 0; i < _current_line.size(); ++i)
 	{
@@ -156,7 +182,7 @@ std::string SQL::Tokenizer::getErrorString(const std::string &message, int addit
 
 		if (i >= error_start - 1 && i <= error_start + _token.size() - 2)
 		{
-			error += COLOR_RED;
+			error += level_colors.at(level);
 		}
 
 		if (_current_line[i] == '\t')
@@ -190,8 +216,18 @@ std::string SQL::Tokenizer::getErrorString(const std::string &message, int addit
 
 	if (!message.empty())
 	{
-		error += COLOR_RED + message + COLOR_RESET + "\n";
+		error += level_colors.at(level) + message + COLOR_RESET + "\n";
 	}
 
 	return error;
+}
+
+void SQL::Tokenizer::consumeRestOfLine()
+{
+	// get the rest of the line
+	while (!_input.empty() && _input[0] != '\n' && _input[0] != EOF)
+	{
+		_current_line += _input[0];
+		_input.erase(0, 1);
+	}
 }

@@ -39,5 +39,6 @@ namespace SQL
 
 		std::string unexpectedSemicolon();
 		std::string expected(const std::string &expected);
+		std::string semanticError(const std::string &message);
 	};
 }

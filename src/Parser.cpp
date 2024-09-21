@@ -1,6 +1,8 @@
 #include <iostream>
+#include <string>
 
 #include "Parser.h"
+#include "SqlSemanticChecker.h"
 
 using namespace SQL;
 
@@ -373,6 +375,13 @@ ParseResult Parser::parseFrom()
 		return { false, unexpectedSemicolon() };
 	}
 
+	auto semantic_check = SQL::globals::table_name_is_not_keyword_semantic_check.check(token);
+
+	if (!semantic_check.success)
+	{
+		return { false, semanticError(semantic_check.error) };
+	}
+
 	std::string table_name = token;
 
 	_tokenizer.next();
@@ -467,4 +476,9 @@ std::string Parser::expected(const std::string &expected)
 	}
 
 	return _tokenizer.getErrorString("expected " + expected, desired_space - whitespace);
+}
+
+std::string SQL::Parser::semanticError(const std::string &message)
+{
+	return _tokenizer.getErrorString(message, 1);
 }
