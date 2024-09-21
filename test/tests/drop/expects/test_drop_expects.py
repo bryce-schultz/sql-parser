@@ -24,7 +24,7 @@ def test_expected_table_name_after_drop_table(parser):
 
 def test_expected_semicolon_after_drop_table_name(parser):
     sql = 'drop table name'
-    expected_error = '\r\nError 1:17\r\ndrop table name\r\n                ^\r\nexpected ;\r\n\r\n'
+    expected_error = '\r\nError 1:16\r\ndrop table name\r\n               ^\r\nexpected ;\r\n\r\n'
 
     result, error = parser.parse(sql)
 

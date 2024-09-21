@@ -84,7 +84,7 @@ def test_expected_value_after_select_star_from_table_where_field_operator(parser
 
 def test_expected_semicolon_after_select_star_from_table_where_field_operator_value(parser):
     sql = 'select * from users where field = 1'
-    expected_error = '\r\nError 1:37\r\nselect * from users where field = 1\r\n                                    ^\r\nexpected ;\r\n\r\n'
+    expected_error = '\r\nError 1:36\r\nselect * from users where field = 1\r\n                                   ^\r\nexpected ;\r\n\r\n'
 
     result, error = parser.parse(sql)
 

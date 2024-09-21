@@ -466,7 +466,16 @@ std::string Parser::unexpectedSemicolon()
 
 std::string Parser::expected(const std::string &expected)
 {
-	const int desired_space = 2;
+	int desired_space = 2;
+
+	// Add custom spacing for certain tokens here
+	if (
+		expected == ";" || 
+		expected == "(" || 
+		expected == ")")
+	{
+		desired_space = 1;
+	}
 
 	int whitespace = _tokenizer.getTrailingspace();
 	if (!_tokenizer.peek().empty())

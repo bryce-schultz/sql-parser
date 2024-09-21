@@ -72,7 +72,7 @@ def test_expected_value_after_delete_from_table_where_field_operator(parser):
 
 def test_expected_semicolon_after_delete_from_table_where_field_operator_value(parser):
     sql = 'delete from users where field = 1'
-    expected_error = '\r\nError 1:35\r\ndelete from users where field = 1\r\n                                  ^\r\nexpected ;\r\n\r\n'
+    expected_error = '\r\nError 1:34\r\ndelete from users where field = 1\r\n                                 ^\r\nexpected ;\r\n\r\n'
 
     result, error = parser.parse(sql)
 
