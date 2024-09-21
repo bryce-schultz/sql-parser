@@ -4,6 +4,8 @@
 
 using namespace SQL;
 
+#define SUCCESS return { true, "", { COLOR_GREEN + "success" + COLOR_RESET } }
+
 Parser::Parser():
 	_tokenizer()
 {
@@ -163,7 +165,7 @@ ParseResult Parser::parseSelect()
 	if (token == ";")
 	{
 		_tokenizer.next();
-		return { true, "", { COLOR_GREEN + "success" } };
+		SUCCESS;
 	}
 
 	if (token != "where")
@@ -189,7 +191,7 @@ ParseResult Parser::parseSelect()
 	// select * from table where field operator value ;
 	_tokenizer.next();
 
-	return { true, "", { COLOR_GREEN + "success" } };
+	SUCCESS;
 }
 
 ParseResult Parser::parseInsert()
@@ -245,7 +247,7 @@ ParseResult Parser::parseDelete()
 	if (token == ";")
 	{
 		_tokenizer.next();
-		return { true, "", { COLOR_GREEN + "success" } };
+		SUCCESS;
 	}
 
 	if (token != "where")
@@ -270,7 +272,7 @@ ParseResult Parser::parseDelete()
 
 	_tokenizer.next();
 
-	return { true, "", { COLOR_GREEN + "success" } };
+	SUCCESS;
 }
 
 ParseResult Parser::parseCreate()
@@ -342,7 +344,7 @@ ParseResult Parser::parseDrop()
 
 	_tokenizer.next();
 
-	return { true, "", { COLOR_GREEN + "success"}};
+	SUCCESS;
 }
 
 ParseResult Parser::parseFrom()
