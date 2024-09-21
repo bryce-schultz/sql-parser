@@ -301,9 +301,7 @@ ParseResult Parser::parseDrop()
 		return { false, expected("drop") };
 	}
 
-	_tokenizer.next();
-
-	token = _tokenizer.peek();
+	token = _tokenizer.next();
 
 	if (token.empty())
 	{
@@ -320,9 +318,7 @@ ParseResult Parser::parseDrop()
 		return { false, expected("table") };
 	}
 
-	_tokenizer.next();
-
-	token = _tokenizer.peek();
+	token = _tokenizer.next();
 
 	if (token.empty())
 	{
@@ -334,9 +330,7 @@ ParseResult Parser::parseDrop()
 		return { false, unexpectedSemicolon() };
 	}
 
-	_tokenizer.next();
-
-	token = _tokenizer.peek();
+	token = _tokenizer.next();
 
 	if (token != ";")
 	{
@@ -403,9 +397,7 @@ ParseResult Parser::parseWhere()
 		return { false, expected("where") };
 	}
 
-	_tokenizer.next();
-
-	token = _tokenizer.peek();
+	token = _tokenizer.next();
 
 	if (token.empty())
 	{
@@ -417,9 +409,7 @@ ParseResult Parser::parseWhere()
 		return { false, unexpectedSemicolon() };
 	}
 
-	_tokenizer.next();
-
-	token = _tokenizer.peek();
+	token = _tokenizer.next();
 
 	if (token.empty())
 	{
@@ -431,9 +421,7 @@ ParseResult Parser::parseWhere()
 		return { false, unexpectedSemicolon() };
 	}
 
-	_tokenizer.next();
-
-	token = _tokenizer.peek();
+	token = _tokenizer.next();
 
 	if (token.empty())
 	{
