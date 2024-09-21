@@ -20,7 +20,6 @@ namespace SQL
 	public:
 		Parser();
 		ParseResult parse(const std::string &input);
-		// void parseFile(const std::string &filename);
 
 	private:
 		Tokenizer _tokenizer;

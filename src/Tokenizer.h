@@ -10,6 +10,7 @@ extern const std::string COLOR_GREEN;
 extern const std::string COLOR_LIGHT_GREY;
 extern const std::string COLOR_YELLOW;
 extern const std::string COLOR_BLUE;
+extern const std::string DECORATION_BOLD;
 extern const std::string DECORATION_STRIKETHROUGH;
 
 extern std::string COLOR_RGB(int r, int g, int b);

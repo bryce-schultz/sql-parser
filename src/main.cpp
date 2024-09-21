@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 #include "Parser.h"
 
@@ -16,7 +17,45 @@ int main(int argc, char **argv)
 
 	if (argc == 2)
 	{
-		std::string input(argv[1]);	
+		std::string filename(argv[1]);
+
+		std::ifstream file(filename);
+
+		if (!file.is_open())
+		{
+			std::cerr << "Could not open file: " << filename << std::endl;
+			return 1;
+		}
+
+		std::string line;
+
+		while (std::getline(file, line))
+		{
+			if (line.empty())
+			{
+				break;
+			}
+
+			Parser parser;
+			auto result = parser.parse(line);
+
+			if (result.success)
+			{
+				for (const auto &arg : result.args)
+				{
+					std::cout << arg << std::endl;
+				}
+			}
+			else
+			{
+				for (const auto &arg : result.args)
+				{
+					std::cerr << arg << std::endl;
+				}
+
+				std::cerr << result.error << std::endl;
+			}
+		}
 	}
 	else
 	{

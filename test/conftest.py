@@ -38,7 +38,8 @@ def parser():
     # get the parser executable
     parser_executable = os.path.abspath(os.path.join(directory, '../src/x64/Debug/sql-parser.exe'))
 
-    assert os.path.exists(parser_executable)
-
     parser = Parser(parser_executable)
+
+    assert os.path.exists(parser_executable)
+    
     yield parser

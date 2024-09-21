@@ -1,11 +1,12 @@
 #include "Tokenizer.h"
 
-const std::string COLOR_RED = "\033[1;31m";
+const std::string COLOR_RED = "\033[0;31m";
 const std::string COLOR_RESET = "\033[0m";
 const std::string COLOR_GREEN = "\033[1;32m";
 const std::string COLOR_LIGHT_GREY = COLOR_RGB(100, 100, 100);
 const std::string COLOR_YELLOW = "\033[1;33m";
 const std::string COLOR_BLUE = "\033[1;34m";
+const std::string DECORATION_BOLD = "\033[1m";
 const std::string DECORATION_STRIKETHROUGH = "\033[9m";
 
 std::string COLOR_RGB(int r, int g, int b)
@@ -218,7 +219,7 @@ std::string SQL::Tokenizer::getLevelString(ErrorLevel level, const std::string &
 		error += " ";
 	}
 
-	error += "^\n";
+	error += level_colors.at(level) + DECORATION_BOLD + "^\n" + COLOR_RESET;
 
 	if (!message.empty())
 	{
