@@ -11,7 +11,8 @@ SQL::Tokenizer::Tokenizer():
 	_token(""),
 	_current_line(""),
 	_lineno(1),
-	_column(1)
+	_column(1),
+	_trailingspace(0)
 {
 }
 
@@ -22,7 +23,8 @@ SQL::Tokenizer::Tokenizer(const std::string &input, const std::string &filename)
 	_token(""),
 	_current_line(""),
 	_lineno(1),
-	_column(1)
+	_column(1),
+	_trailingspace(0)
 {
 }
 
