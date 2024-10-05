@@ -21,57 +21,69 @@ WHERE = "where"
 EXISTS = "exists"
 LIKE = "like"
 CREATE = "create"
+INSERT = "insert"
+INTO = "into"
+VALUES = "values"
 
-start     : stmts
+start               : stmts
 
-stmts     : stmt stmts
-          | stmt
-          | lambda
+stmts               : stmt stmts
+                    | stmt
+                    | lambda
 
-stmt      : select
-          | delete
-          | drop
-          | create
-          | error
+stmt                : select
+                    | delete
+                    | drop
+                    | create
+                    | insert
+                    | error
 
-select    : select' where ';'
-          | select' ';'
+select              : select' where ';'
+                    | select' ';'
 
-select'   : SELECT * from
+select'             : SELECT * from
 
-delete    : delete' where ';'
-          | delete' ';'
+delete              : delete' where ';'
+                    | delete' ';'
 
-delete'   : DELETE from
+delete'             : DELETE from
 
-drop      : DROP TABLE IDENTIFIER ';'
+drop                : DROP TABLE IDENTIFIER ';'
 
-create    : CREATE TABLE IDENTIFIER '(' schema ')' ';'
+create              : CREATE TABLE IDENTIFIER '(' schema ')' ';'
 
-schema    : schema, scheme
-          | scheme            // note can't be empty.
+insert              : INSERT INTO IDENTIFIER '(' identifier_list ')' VALUES '(' value_list ')' ';'
 
-scheme    : type IDENTIFIER
+schema              : schema, scheme
+                    | scheme            // note can't be empty.
 
-from      : FROM IDENTIFIER
+scheme              : type IDENTIFIER
 
-where     : WHERE IDENTIFIER operator value
-          | WHERE IDENTIFIER EXISTS
+identifier_list     : identifier_list ',' IDENTIFIER
+                    | IDENTIFIER
 
-operator  : '='
-          | '!='
-          | '<='
-          | '>='
-          | LIKE
+from                : FROM IDENTIFIER
 
-value     : INTEGER_LITERAL
-          | FLOAT_LITERAL
-          | STRING_LITERAL
-          | BOOL_LITERAL
-          | CHAR_LITERAL
+where               : WHERE IDENTIFIER operator value
+                    | WHERE IDENTIFIER EXISTS
 
-type      : INT
-          | FLOAT
-          | STRING
-          | BOOL
-          | CHAR
+operator            : '='
+                    | '!='
+                    | '<='
+                    | '>='
+                    | LIKE
+
+value_list          : value_list ',' value
+                    | value
+
+value               : INTEGER_LITERAL
+                    | FLOAT_LITERAL
+                    | STRING_LITERAL
+                    | BOOL_LITERAL
+                    | CHAR_LITERAL
+
+type                : INT
+                    | FLOAT
+                    | STRING
+                    | BOOL
+                    | CHAR
