@@ -198,12 +198,164 @@ ParseResult Parser::parseSelect()
 
 ParseResult Parser::parseInsert()
 {
-	return ParseResult();
+	auto token = _tokenizer.peek();
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	if (token != "insert")
+	{
+		return { false, expected("insert") };
+	}
+
+	token = _tokenizer.next();
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	if (token != "into")
+	{
+		return { false, expected("into") };
+	}
+
+	token = _tokenizer.next();
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	if (token.empty())
+	{
+		return { false, expected("a table name") };
+	}
+
+	auto semantic_check = SQL::globals::table_name_is_not_keyword_semantic_check.check(token);
+
+	if (!semantic_check.success)
+	{
+		return { false, semanticError(semantic_check.error) };
+	}
+
+	token = _tokenizer.next();
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	if (token != "(")
+	{
+		return { false, expected("(") };
+	}
+
+	token = _tokenizer.next();
+
+	if (token.empty())
+	{
+		return { false, expected("a column name") };
+	}
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	auto result = parseIdentifierList();
+
+	if (!result.success)
+	{
+		return { false, result.error };
+	}
+
+	token = _tokenizer.peek();
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	if (token != ")")
+	{
+		return { false, expected(")") };
+	}
+
+	token = _tokenizer.next();
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	if (token != "values")
+	{
+		return { false, expected("values") };
+	}
+
+	token = _tokenizer.next();
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	if (token != "(")
+	{
+		return { false, expected("(") };
+	}
+
+	token = _tokenizer.next();
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	if (token.empty())
+	{
+		return { false, expected("a value") };
+	}
+
+	result = parseValueList();
+
+	if (!result.success)
+	{
+		return { false, result.error };
+	}
+
+	token = _tokenizer.peek();
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	if (token != ")")
+	{
+		return { false, expected(")") };
+	}
+
+	_tokenizer.next();
+
+	token = _tokenizer.peek();
+
+	if (token != ";")
+	{
+		return { false, expected(";") };
+	}
+
+	_tokenizer.next();
+
+	SUCCESS;
 }
 
 ParseResult Parser::parseUpdate()
 {
-	return ParseResult();
+	return { false, _tokenizer.getWarningString("Unimplemented", 1) };
 }
 
 ParseResult Parser::parseDelete()
@@ -652,6 +804,127 @@ ParseResult SQL::Parser::parseScheme()
 	token = _tokenizer.next();
 
 	return { true, "", { type, column_name } };
+}
+
+ParseResult SQL::Parser::parseIdentifierList()
+{
+	auto token = _tokenizer.peek();
+
+	if (token.empty())
+	{
+		return { false, expected("an identifier") };
+	}
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	auto semantic_check = SQL::globals::invalid_identifier_semantic_check.check(token);
+
+	if (!semantic_check.success)
+	{
+		return { false, semanticError(semantic_check.error) };
+	}
+
+	Args args;
+
+	args.push_back(token);
+
+	token = _tokenizer.next();
+
+	if (token.empty())
+	{
+		return { false, expected(",") };
+	}
+
+	if (token == ")")
+	{
+		return { true, "", args };
+	}
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	if (token != ",")
+	{
+		return { false, expected(",") };
+	}
+
+	token = _tokenizer.next();
+
+	auto result = parseIdentifierList();
+
+	if (!result.success)
+	{
+		return { false, result.error };
+	}
+
+	for (const auto &arg : result.args)
+	{
+		args.push_back(arg);
+	}
+
+	return { true, "", args };
+}
+
+ParseResult SQL::Parser::parseValueList()
+{
+	auto token = _tokenizer.peek();
+
+	if (token.empty())
+	{
+		return { false, expected("a value") };
+	}
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	Args args;
+
+	args.push_back(token);
+
+	token = _tokenizer.next();
+
+	if (token.empty())
+	{
+		return { false, expected(",") };
+	}
+
+	if (token == ")")
+	{
+		return { true, "", args };
+	}
+
+	if (token == ";")
+	{
+		return { false, unexpectedSemicolon() };
+	}
+
+	if (token != ",")
+	{
+		return { false, expected(",") };
+	}
+
+	token = _tokenizer.next();
+
+	auto result = parseValueList();
+
+	if (!result.success)
+	{
+		return { false, result.error };
+	}
+
+	for (const auto &arg : result.args)
+	{
+		args.push_back(arg);
+	}
+
+	return { true, "", args };
 }
 
 ParseResult SQL::Parser::parseType()

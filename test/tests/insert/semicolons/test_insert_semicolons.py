@@ -40,7 +40,7 @@ def test_semicolon_after_insert_into_table(parser):
 def test_semicolon_after_insert_into_table_open_parenthesis(parser):
     sql = 'insert into users (;'
     expected_result = ''
-    expected_error = '\r\nError 1:19\r\ninsert into users (;\r\n                  ^\r\nunexpected ;\r\n\r\n'
+    expected_error = '\r\nError 1:20\r\ninsert into users (;\r\n                   ^\r\nunexpected ;\r\n\r\n'
 
     result, error = parser.parse(sql)
 
@@ -53,7 +53,7 @@ def test_semicolon_after_insert_into_table_open_parenthesis(parser):
 def test_semicolon_after_insert_into_table_open_parenthesis_column_name(parser):
     sql = 'insert into users (id;'
     expected_result = ''
-    expected_error = '\r\nError 1:21\r\ninsert into users (id;\r\n                    ^\r\nunexpected ;\r\n\r\n'
+    expected_error = '\r\nError 1:22\r\ninsert into users (id;\r\n                     ^\r\nunexpected ;\r\n\r\n'
 
     result, error = parser.parse(sql)
 
@@ -66,7 +66,7 @@ def test_semicolon_after_insert_into_table_open_parenthesis_column_name(parser):
 def test_semicolon_after_insert_into_table_open_parenthesis_column_name_close_parenthesis(parser):
     sql = 'insert into users (id);'
     expected_result = ''
-    expected_error = '\r\nError 1:22\r\ninsert into users (id);\r\n                     ^\r\nunexpected ;\r\n\r\n'
+    expected_error = '\r\nError 1:23\r\ninsert into users (id);\r\n                      ^\r\nunexpected ;\r\n\r\n'
 
     result, error = parser.parse(sql)
 
@@ -79,7 +79,7 @@ def test_semicolon_after_insert_into_table_open_parenthesis_column_name_close_pa
 def test_semicolon_after_insert_into_table_open_parenthesis_column_name_close_parenthesis_values(parser):
     sql = 'insert into users (id) values;'
     expected_result = ''
-    expected_error = '\r\nError 1:29\r\ninsert into users (id) values;\r\n                            ^\r\nunexpected ;\r\n\r\n'
+    expected_error = '\r\nError 1:30\r\ninsert into users (id) values;\r\n                             ^\r\nunexpected ;\r\n\r\n'
 
     result, error = parser.parse(sql)
 
@@ -92,7 +92,7 @@ def test_semicolon_after_insert_into_table_open_parenthesis_column_name_close_pa
 def test_semicolon_after_insert_into_table_open_parenthesis_column_name_close_parenthesis_values_open_parenthesis(parser):
     sql = 'insert into users (id) values (;'
     expected_result = ''
-    expected_error = '\r\nError 1:30\r\ninsert into users (id) values (;\r\n                             ^\r\nunexpected ;\r\n\r\n'
+    expected_error = '\r\nError 1:32\r\ninsert into users (id) values (;\r\n                               ^\r\nunexpected ;\r\n\r\n'
 
     result, error = parser.parse(sql)
 
@@ -105,7 +105,7 @@ def test_semicolon_after_insert_into_table_open_parenthesis_column_name_close_pa
 def test_semicolon_after_insert_into_table_open_parenthesis_column_name_close_parenthesis_values_open_parenthesis_value(parser):
     sql = 'insert into users (id) values (1;'
     expected_result = ''
-    expected_error = '\r\nError 1:32\r\ninsert into users (id) values (1;\r\n                               ^\r\nunexpected ;\r\n\r\n'
+    expected_error = '\r\nError 1:33\r\ninsert into users (id) values (1;\r\n                                ^\r\nunexpected ;\r\n\r\n'
 
     result, error = parser.parse(sql)
 

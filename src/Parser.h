@@ -37,6 +37,8 @@ namespace SQL
 		ParseResult parseWhere();
 		ParseResult parseSchema();
 		ParseResult parseScheme();
+		ParseResult parseIdentifierList();
+		ParseResult parseValueList();
 
 		ParseResult parseType();
 
