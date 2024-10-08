@@ -792,12 +792,12 @@ ParseResult SQL::Parser::parseScheme()
 		return { false, expected("a column name") };
 	}
 
-	//auto semantic_check = SQL::globals::is_valid_identifier.check(token);
+	auto semantic_check = SQL::globals::invalid_identifier_semantic_check.check(token);
 
-	//if (!semantic_check.success)
-	//{
-	//	return { false, semanticError(semantic_check.error) };
-	//}
+	if (!semantic_check.success)
+	{
+		return { false, semanticError(semantic_check.error) };
+	}
 
 	std::string column_name = token;
 

@@ -59,7 +59,7 @@ namespace SQL
 
 			if (!result)
 			{
-				return { false, "Table name cannot be a keyword" };
+				return { false, "table name cannot be a keyword" };
 			}
 
 			return { true };
@@ -101,7 +101,7 @@ namespace SQL
 
 			if (!result)
 			{
-				return { false, "Invalid type" };
+				return { false, "invalid type" };
 			}
 
 			return { true };
@@ -163,7 +163,7 @@ namespace SQL
 
 			if (!result)
 			{
-				return { false, "Identifier cannot be a keyword" };
+				return { false, "column name cannot be a keyword" };
 			}
 
 			return { true };
